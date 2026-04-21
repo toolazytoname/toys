@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>来音节拍器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+        }
+        
+        body {
+            background: #121212;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        /* 头部导航 */
+        .header {
+            padding: 20px 16px 0;
+            margin-bottom: 40px;
+        }
+        
+        .nav-tabs {
+            background: #1E1E1E;
+            border-radius: 12px;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-tab {
+            background: transparent;
+            border: none;
+            color: #AAAAAA;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-tab.active {
+            background: #333333;
+            color: white;
+        }
+        
+        .nav-tab:hover {
+            background: #2A2A2A;
+            color: white;
+        }
+        
+        /* 节拍指示器 */
+        .beats-container {
+            padding: 0 16px;
+            margin-bottom: 60px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            min-height: 240px;
+        }
+        
+        .beat-bar {
+            flex: 1;
+            background: #1E1E1E;
+            border-radius: 4px;
+            position: relative;
+            transition: all 0.1s ease;
+            min-height: 60px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        
+        .beat-bar.active {
+            background: white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        .beat-bar.weak {
+            height: 100%;
+        }
+        
+        .beat-bar.strong {
+            height: 100%;
+        }
+        
+        /* BPM 控制 */
+        .bpm-container {
+            padding: 0 16px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        .bpm-display {
+            font-size: 72px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .bpm-icon {
+            font-size: 36px;
+            opacity: 0.7;
+        }
+        
+        .bpm-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+        
+        .bpm-btn {
+            background: #333333;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .bpm-btn:hover {
+            background: #444444;
+            transform: scale(1.1);
+        }
+        
+        .bpm-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* 底部控制 */
+        .bottom-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            padding: 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .control-btn {
+            background: #333333;
+            border: none;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: #444444;
+            transform: scale(1.1);
+        }
+        
+        .play-btn {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            width: 80px;
+            height: 80px;
+            font-size: 28px;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+        }
+        
+        /* 状态提示 */
+        .status-text {
+            font-size: 12px;
+            color: #888888;
+            margin-top: 8px;
+        }
+        
+        /* 响应式调整 */
+        @media (min-width: 768px) {
+            .beats-container {
+                max-width: 600px;
+                margin: 0 auto 60px;
+            }
+            
+            .bpm-container {
+                max-width: 600px;
+                margin: 0 auto 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <div class="header">
+        <div class="text-center mb-4">
+            <h1 class="text-2xl font-bold mb-2">来音节拍器</h1>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-signature="4/4">4/4 🎶</button>
+            <button class="nav-tab" data-signature="3/4">3/4 🎵</button>
+            <button class="nav-tab" data-signature="2/4">2/4 🎼</button>
+            <button class="nav-tab" data-signature="6/8">6/8 🎷</button>
+            <button class="nav-tab" data-signature="5/4">5/4 🎺</button>
+            <button class="nav-tab" data-signature="7/8">7/8 🎸</button>
+        </div>
+    </div>
+
+    <!-- 节拍指示器 -->
+    <div class="beats-container" id="beats-container">
+        <!-- 节拍条将通过JS动态生成 -->
+    </div>
+
+    <!-- BPM 控制 -->
+    <div class="bpm-container">
+        <div class="bpm-display">
+            <span class="bpm-icon">♩</span>
+            <span id="bpm-value">90</span>
+        </div>
+        <div class="bpm-controls">
+            <button class="bpm-btn" id="bpm-decrease">−</button>
+            <button class="bpm-btn" id="bpm-increase">+</button>
+        </div>
+        <div class="status-text" id="status-text">点击开始按钮启动节拍器</div>
+    </div>
+
+    <!-- 底部控制 -->
+    <div class="bottom-controls">
+        <button class="control-btn" id="timer-btn">
+            <span>⏱️</span>
+        </button>
+        <button class="control-btn play-btn" id="play-btn">
+            <span>▶️</span>
+        </button>
+        <button class="control-btn" id="settings-btn">
+            <span>⚙️</span>
+        </button>
+    </div>
+
+    <script>
+        class MobileMetronome {
+            constructor() {
+                this.bpm = 90;
+                this.timeSignature = '4/4';
+                this.isRunning = false;
+                this.currentBeat = 0;
+                this.intervalId = null;
+                this.beatCount = 4;
+                
+                this.audioContext = null;
+                this.strongSound = null;
+                this.weakSound = null;
+                
+                this.initAudio();
+                this.bindEvents();
+                this.updateBeats();
+            }
+            
+            initAudio() {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.audioContext = new AudioContext();
+                
+                this.strongSound = this.createSound(880, 0.12);
+                this.weakSound = this.createSound(440, 0.12);
+            }
+            
+            createSound(frequency, duration) {
+                return () => {
+                    if (this.audioContext.state === 'suspended') {
+                        this.audioContext.resume();
+                    }
+                    
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+                    
+                    oscillator.start(this.audioContext.currentTime);
+                    oscillator.stop(this.audioContext.currentTime + duration);
+                };
+            }
+            
+            setBpm(bpm) {
+                this.bpm = Math.max(20, Math.min(400, bpm));
+                document.getElementById('bpm-value').textContent = this.bpm;
+                
+                if (this.isRunning) {
+                    this.stop();
+                    this.start();
+                }
+            }
+            
+            setTimeSignature(signature) {
+                this.timeSignature = signature;
+                const [beats, unit] = signature.split('/').map(Number);
+                this.beatCount = beats;
+                
+                this.updateBeats();
+                
+                // 更新活动按钮
+                document.querySelectorAll('.nav-tab').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.signature === signature) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                if (this.isRunning) {
+                    this.currentBeat = 0;
+                }
+            }
+            
+            updateBeats() {
+                const container = document.getElementById('beats-container');
+                container.innerHTML = '';
+                
+                for (let i = 0; i < this.beatCount; i++) {
+                    const beatBar = document.createElement('div');
+                    beatBar.className = 'beat-bar';
+                    beatBar.dataset.beat = i;
+                    
+                    // 第一拍更高
+                    if (i === 0) {
+                        beatBar.style.height = '100%';
+                    } else {
+                        beatBar.style.height = `${80 - (i * 10)}%`;
+                        beatBar.style.opacity = `${0.9 - (i * 0.1)}`;
+                    }
+                    
+                    container.appendChild(beatBar);
+                }
+            }
+            
+            start() {
+                if (this.isRunning) return;
+                
+                this.isRunning = true;
+                document.getElementById('play-btn').innerHTML = '<span>⏸️</span>';
+                document.getElementById('status-text').textContent = `运行中 • ${this.bpm} BPM • ${this.timeSignature}`;
+                
+                const interval = 60000 / this.bpm;
+                this.intervalId = setInterval(() => this.tick(), interval);
+            }
+            
+            stop() {
+                if (!this.isRunning) return;
+                
+                this.isRunning = false;
+                clearInterval(this.intervalId);
+                document.getElementById('play-btn').innerHTML = '<span>▶️</span>';
+                document.getElementById('status-text').textContent = '已暂停 • 点击开始按钮继续';
+                
+                // 清除所有活动节拍
+                document.querySelectorAll('.beat-bar').forEach(bar => {
+                    bar.classList.remove('active');
+                });
+            }
+            
+            togglePlay() {
+                if (this.isRunning) {
+                    this.stop();
+                } else {
+                    this.start();
+                }
+            }
+            
+            tick() {
+                // 清除上一个节拍
+                document.querySelectorAll('.beat-bar').forEach(bar => {
+                    bar.classList.remove('active');
+                });
+                
+                // 设置当前节拍
+                const beatElement = document.querySelector(`[data-beat="${this.currentBeat}"]`);
+                if (beatElement) {
+                    beatElement.classList.add('active');
+                }
+                
+                // 播放声音
+                if (this.currentBeat === 0) {
+                    this.strongSound();
+                } else {
+                    this.weakSound();
+                }
+                
+                this.currentBeat = (this.currentBeat + 1) % this.beatCount;
+            }
+            
+            bindEvents() {
+                // BPM 控制
+                document.getElementById('bpm-increase').addEventListener('click', () => {
+                    this.setBpm(this.bpm + 5);
+                });
+                
+                document.getElementById('bpm-decrease').addEventListener('click', () => {
+                    this.setBpm(this.bpm - 5);
+                });
+                
+                // 播放按钮
+                document.getElementById('play-btn').addEventListener('click', () => {
+                    this.togglePlay();
+                });
+                
+                // 节拍类型选择
+                document.querySelectorAll('.nav-tab').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.setTimeSignature(btn.dataset.signature);
+                    });
+                });
+                
+                // 底部控制按钮
+                document.getElementById('timer-btn').addEventListener('click', () => {
+                    alert('计时器功能将在后续版本添加');
+                });
+                
+                document.getElementById('settings-btn').addEventListener('click', () => {
+                    alert('设置功能将在后续版本添加');
+                });
+                
+                // 页面可见性改变时处理
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && this.isRunning) {
+                        this.stop();
+                    }
+                });
+            }
+        }
+        
+        // 初始化节拍器
+        document.addEventListener('DOMContentLoaded', () => {
+            window.metronome = new MobileMetronome();
+        });
+    </script>
+</body>
+</html>

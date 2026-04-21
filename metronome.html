@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专业节拍器 - 钢琴吉他练习助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+        
+        .theme-sunny {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        
+        .theme-ocean {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        
+        .theme-candy {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        
+        .metronome-container {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .bpm-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            outline: none;
+        }
+        
+        .bpm-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 3px solid #667eea;
+            transition: all 0.2s ease;
+        }
+        
+        .bpm-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .beat-indicator {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .beat-strong {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 8px 24px rgba(245, 87, 108, 0.4);
+            transform: scale(1.1);
+        }
+        
+        .beat-weak {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 8px 24px rgba(79, 172, 254, 0.4);
+        }
+        
+        .beat-active {
+            animation: pulse 0.3s ease;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .control-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .control-btn:active {
+            transform: translateY(0);
+        }
+        
+        .time-signature-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .time-signature-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="metronome-container p-8 max-w-md w-full">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent mb-2">
+                🎵 趣味节拍器
+            </h1>
+            <p class="text-gray-700">钢琴·吉他·快乐练习</p>
+        </div>
+        
+        <!-- 主题切换 -->
+        <div class="flex gap-3 justify-center mb-6">
+            <button class="theme-btn active bg-gradient-to-r from-orange-300 to-pink-300 text-white px-4 py-2 rounded-full text-sm font-semibold" data-theme="sunny">☀️ 阳光</button>
+            <button class="theme-btn bg-gradient-to-r from-blue-300 to-purple-300 text-white px-4 py-2 rounded-full text-sm font-semibold" data-theme="ocean">🌊 海洋</button>
+            <button class="theme-btn bg-gradient-to-r from-pink-300 to-purple-300 text-white px-4 py-2 rounded-full text-sm font-semibold" data-theme="candy">🍬 糖果</button>
+        </div>
+
+        <!-- BPM 显示和调节 -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <label class="text-lg font-semibold text-gray-700">速度 (BPM)</label>
+                <div class="flex gap-2 items-center">
+                    <div class="text-3xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent" id="bpm-display">120</div>
+                    <input 
+                        type="number" 
+                        min="20" 
+                        max="400" 
+                        value="120" 
+                        class="w-20 px-3 py-2 border-2 border-orange-300 rounded-lg text-center font-semibold text-gray-700"
+                        id="bpm-input"
+                    >
+                </div>
+            </div>
+            <input 
+                type="range" 
+                min="20" 
+                max="400" 
+                value="120" 
+                class="bpm-slider w-full"
+                id="bpm-slider"
+            >
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+                <span>🐢 慢</span>
+                <span>🐇 快</span>
+                <span>⚡ 极快</span>
+            </div>
+        </div>
+
+        <!-- 节拍类型选择 -->
+        <div class="mb-8">
+            <label class="text-lg font-semibold text-gray-700 block mb-3">节拍类型</label>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <button class="time-signature-btn active py-3 px-4 rounded-lg font-medium bg-orange-100 text-orange-800 border-2 border-orange-300" data-signature="4/4">4/4 🎶</button>
+                <button class="time-signature-btn py-3 px-4 rounded-lg font-medium bg-blue-100 text-blue-800 border-2 border-transparent hover:border-blue-300" data-signature="3/4">3/4 🎵</button>
+                <button class="time-signature-btn py-3 px-4 rounded-lg font-medium bg-green-100 text-green-800 border-2 border-transparent hover:border-green-300" data-signature="2/4">2/4 🎼</button>
+                <button class="time-signature-btn py-3 px-4 rounded-lg font-medium bg-purple-100 text-purple-800 border-2 border-transparent hover:border-purple-300" data-signature="6/8">6/8 🎷</button>
+                <button class="time-signature-btn py-3 px-4 rounded-lg font-medium bg-pink-100 text-pink-800 border-2 border-transparent hover:border-pink-300" data-signature="3/8">3/8 🎺</button>
+                <button class="time-signature-btn py-3 px-4 rounded-lg font-medium bg-yellow-100 text-yellow-800 border-2 border-transparent hover:border-yellow-300" data-signature="2/2">2/2 🎸</button>
+            </div>
+            
+            <!-- 自定义节拍输入 -->
+            <div class="bg-gradient-to-r from-orange-100 to-pink-100 p-4 rounded-lg">
+                <label class="text-sm font-semibold text-gray-700 block mb-2">自定义节拍 ⚙️</label>
+                <div class="flex gap-2 items-center">
+                    <input 
+                        type="number" 
+                        min="1" 
+                        max="16" 
+                        value="4" 
+                        class="w-20 px-3 py-2 border-2 border-orange-300 rounded-lg text-center font-semibold text-gray-700"
+                        id="custom-beat-count"
+                    >
+                    <span class="text-xl font-bold">/</span>
+                    <input 
+                        type="number" 
+                        min="1" 
+                        max="16" 
+                        value="4" 
+                        class="w-20 px-3 py-2 border-2 border-orange-300 rounded-lg text-center font-semibold text-gray-700"
+                        id="custom-beat-unit"
+                    >
+                    <button class="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-4 py-2 rounded-lg font-semibold" id="apply-custom-beat">
+                        应用
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 当前节拍显示 -->
+        <div class="flex items-center justify-center gap-4 mb-8">
+            <div class="beat-indicator beat-strong" id="beat-1">1</div>
+            <div class="beat-indicator beat-weak" id="beat-2">2</div>
+            <div class="beat-indicator beat-weak" id="beat-3">3</div>
+            <div class="beat-indicator beat-weak" id="beat-4">4</div>
+        </div>
+
+        <!-- 控制按钮 -->
+        <div class="flex gap-4 justify-center">
+            <button class="control-btn bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full w-16 h-16 flex items-center justify-center" id="reset-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            </button>
+            <button class="control-btn bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center text-xl font-bold" id="start-stop-btn">
+                开始
+            </button>
+        </div>
+
+        <!-- 声音设置 -->
+        <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+            <label class="text-sm font-semibold text-gray-700 block mb-2">声音测试</label>
+            <div class="flex gap-2">
+                <button class="control-btn bg-gradient-to-r from-purple-400 to-pink-500 text-white px-4 py-2 rounded-lg text-sm" id="test-strong-sound">强拍声音</button>
+                <button class="control-btn bg-gradient-to-r from-blue-400 to-cyan-500 text-white px-4 py-2 rounded-lg text-sm" id="test-weak-sound">弱拍声音</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 节拍器核心类
+        class Metronome {
+            constructor() {
+                this.bpm = 120;
+                this.timeSignature = '4/4';
+                this.isRunning = false;
+                this.currentBeat = 0;
+                this.intervalId = null;
+                this.beatCount = 4;
+                this.strongBeatInterval = 1;
+                this.currentTheme = 'sunny';
+                
+                // 创建音频上下文
+                this.audioContext = null;
+                this.strongSound = null;
+                this.weakSound = null;
+                
+                this.initAudio();
+                this.bindEvents();
+                this.applyTheme(this.currentTheme);
+            }
+            
+            initAudio() {
+                // 初始化音频上下文
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.audioContext = new AudioContext();
+                
+                // 创建强拍声音 (正弦波)
+                this.strongSound = this.createSound(880, 0.1);
+                // 创建弱拍声音 (正弦波)
+                this.weakSound = this.createSound(440, 0.1);
+            }
+            
+            createSound(frequency, duration) {
+                return () => {
+                    if (this.audioContext.state === 'suspended') {
+                        this.audioContext.resume();
+                    }
+                    
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+                    
+                    oscillator.start(this.audioContext.currentTime);
+                    oscillator.stop(this.audioContext.currentTime + duration);
+                };
+            }
+            
+            setBpm(bpm) {
+                this.bpm = bpm;
+                document.getElementById('bpm-display').textContent = bpm;
+                
+                if (this.isRunning) {
+                    this.stop();
+                    this.start();
+                }
+            }
+            
+            setTimeSignature(signature) {
+                this.timeSignature = signature;
+                const [beats, unit] = signature.split('/').map(Number);
+                this.beatCount = beats;
+                
+                // 更新节拍指示器
+                this.updateBeatIndicators();
+                
+                if (this.isRunning) {
+                    this.currentBeat = 0;
+                }
+            }
+            
+            updateBeatIndicators() {
+                const container = document.querySelector('.flex.items-center.justify-center.gap-4');
+                container.innerHTML = '';
+                
+                for (let i = 1; i <= this.beatCount; i++) {
+                    const beatDiv = document.createElement('div');
+                    beatDiv.className = `beat-indicator ${i === 1 ? 'beat-strong' : 'beat-weak'}`;
+                    beatDiv.id = `beat-${i}`;
+                    beatDiv.textContent = i;
+                    container.appendChild(beatDiv);
+                }
+            }
+            
+            start() {
+                if (this.isRunning) return;
+                
+                this.isRunning = true;
+                this.currentBeat = 0;
+                document.getElementById('start-stop-btn').textContent = '暂停';
+                document.getElementById('start-stop-btn').classList.remove('from-green-400', 'to-blue-500', 'hover:from-green-500', 'hover:to-blue-600');
+                document.getElementById('start-stop-btn').classList.add('from-red-400', 'to-pink-500', 'hover:from-red-500', 'hover:to-pink-600');
+                
+                const interval = 60000 / this.bpm;
+                this.intervalId = setInterval(() => this.tick(), interval);
+            }
+            
+            stop() {
+                if (!this.isRunning) return;
+                
+                this.isRunning = false;
+                clearInterval(this.intervalId);
+                document.getElementById('start-stop-btn').textContent = '开始';
+                document.getElementById('start-stop-btn').classList.remove('from-red-400', 'to-pink-500', 'hover:from-red-500', 'hover:to-pink-600');
+                document.getElementById('start-stop-btn').classList.add('from-green-400', 'to-blue-500', 'hover:from-green-500', 'hover:to-blue-600');
+                
+                // 重置节拍指示器
+                this.resetBeatIndicators();
+            }
+            
+            reset() {
+                this.stop();
+                this.currentBeat = 0;
+                this.setBpm(120);
+                document.getElementById('bpm-slider').value = 120;
+                document.getElementById('bpm-input').value = 120;
+                this.setTimeSignature('4/4');
+                
+                // 重置节拍类型按钮
+                document.querySelectorAll('.time-signature-btn').forEach(btn => {
+                    btn.classList.remove('active', 'border-orange-300');
+                    btn.classList.add('border-transparent');
+                    if (btn.dataset.signature === '4/4') {
+                        btn.classList.add('active', 'border-orange-300');
+                        btn.classList.remove('border-transparent');
+                    }
+                });
+                
+                // 重置自定义节拍输入
+                document.getElementById('custom-beat-count').value = 4;
+                document.getElementById('custom-beat-unit').value = 4;
+            }
+            
+            tick() {
+                this.currentBeat = (this.currentBeat + 1) % this.beatCount;
+                const beatNumber = this.currentBeat + 1;
+                
+                // 播放声音
+                if (beatNumber === 1) {
+                    this.strongSound();
+                } else {
+                    this.weakSound();
+                }
+                
+                // 更新节拍指示器
+                this.updateActiveBeat(beatNumber);
+            }
+            
+            updateActiveBeat(beatNumber) {
+                // 移除所有活动状态
+                document.querySelectorAll('.beat-indicator').forEach(beat => {
+                    beat.classList.remove('beat-active');
+                });
+                
+                // 添加当前节拍活动状态
+                const currentBeatElement = document.getElementById(`beat-${beatNumber}`);
+                if (currentBeatElement) {
+                    currentBeatElement.classList.add('beat-active');
+                }
+            }
+            
+            resetBeatIndicators() {
+                document.querySelectorAll('.beat-indicator').forEach(beat => {
+                    beat.classList.remove('beat-active');
+                });
+            }
+            
+            bindEvents() {
+                // BPM 滑块
+                document.getElementById('bpm-slider').addEventListener('input', (e) => {
+                    const bpm = parseInt(e.target.value);
+                    this.setBpm(bpm);
+                    document.getElementById('bpm-input').value = bpm;
+                });
+                
+                // BPM 输入框
+                document.getElementById('bpm-input').addEventListener('input', (e) => {
+                    let bpm = parseInt(e.target.value);
+                    if (isNaN(bpm)) bpm = 120;
+                    if (bpm < 20) bpm = 20;
+                    if (bpm > 400) bpm = 400;
+                    this.setBpm(bpm);
+                    document.getElementById('bpm-slider').value = bpm;
+                });
+                
+                // 开始/暂停按钮
+                document.getElementById('start-stop-btn').addEventListener('click', () => {
+                    if (this.isRunning) {
+                        this.stop();
+                    } else {
+                        this.start();
+                    }
+                });
+                
+                // 重置按钮
+                document.getElementById('reset-btn').addEventListener('click', () => {
+                    this.reset();
+                });
+                
+                // 节拍类型按钮
+                document.querySelectorAll('.time-signature-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.time-signature-btn').forEach(b => {
+                            b.classList.remove('active', 'border-orange-300');
+                            b.classList.add('border-transparent');
+                        });
+                        btn.classList.add('active', 'border-orange-300');
+                        btn.classList.remove('border-transparent');
+                        this.setTimeSignature(btn.dataset.signature);
+                    });
+                });
+                
+                // 自定义节拍应用按钮
+                document.getElementById('apply-custom-beat').addEventListener('click', () => {
+                    const beatCount = parseInt(document.getElementById('custom-beat-count').value);
+                    const beatUnit = parseInt(document.getElementById('custom-beat-unit').value);
+                    
+                    if (isNaN(beatCount) || isNaN(beatUnit) || beatCount < 1 || beatCount > 16 || beatUnit < 1 || beatUnit > 16) {
+                        alert('请输入有效的节拍数字 (1-16)');
+                        return;
+                    }
+                    
+                    const signature = `${beatCount}/${beatUnit}`;
+                    this.setTimeSignature(signature);
+                    
+                    // 清除所有活动按钮
+                    document.querySelectorAll('.time-signature-btn').forEach(b => {
+                        b.classList.remove('active', 'border-orange-300');
+                        b.classList.add('border-transparent');
+                    });
+                });
+                
+                // 声音测试按钮
+                document.getElementById('test-strong-sound').addEventListener('click', () => {
+                    this.strongSound();
+                });
+                
+                document.getElementById('test-weak-sound').addEventListener('click', () => {
+                    this.weakSound();
+                });
+                
+                // 主题切换按钮
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.applyTheme(btn.dataset.theme);
+                    });
+                });
+                
+                // 页面可见性改变时处理
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && this.isRunning) {
+                        // 页面隐藏时暂停，避免后台运行影响性能
+                        this.stop();
+                    }
+                });
+            }
+            
+            applyTheme(theme) {
+                this.currentTheme = theme;
+                document.body.className = `flex items-center justify-center min-h-screen p-4 theme-${theme}`;
+                
+                // 更新主题相关的颜色
+                const bpmSlider = document.getElementById('bpm-slider');
+                const bpmInput = document.getElementById('bpm-input');
+                
+                if (theme === 'sunny') {
+                    bpmInput.className = 'w-20 px-3 py-2 border-2 border-orange-300 rounded-lg text-center font-semibold text-gray-700';
+                    bpmSlider.style.background = 'linear-gradient(90deg, #f97316 0%, #ec4899 100%)';
+                } else if (theme === 'ocean') {
+                    bpmInput.className = 'w-20 px-3 py-2 border-2 border-blue-300 rounded-lg text-center font-semibold text-gray-700';
+                    bpmSlider.style.background = 'linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%)';
+                } else if (theme === 'candy') {
+                    bpmInput.className = 'w-20 px-3 py-2 border-2 border-pink-300 rounded-lg text-center font-semibold text-gray-700';
+                    bpmSlider.style.background = 'linear-gradient(90deg, #ec4899 0%, #a855f7 100%)';
+                }
+            }
+        }
+        
+        // 初始化节拍器
+        document.addEventListener('DOMContentLoaded', () => {
+            window.metronome = new Metronome();
+        });
+    </script>
+</body>
+</html>
