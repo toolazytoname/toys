@@ -394,8 +394,8 @@
                     <button class="bpm-btn w-10 h-10 text-xl" id="bpm-decrease">-</button>
                     <input 
                         type="range" 
-                        min="20" 
-                        max="400" 
+                        min="40" 
+                        max="208" 
                         value="120" 
                         class="bpm-slider"
                         id="bpm-slider"
@@ -403,8 +403,8 @@
                     <button class="bpm-btn w-10 h-10 text-xl" id="bpm-increase">+</button>
                 </div>
                 <div class="flex justify-between text-sm text-gray-600 mt-3 px-1">
-                    <span class="font-semibold">🐢 慢速 20</span>
-                    <span class="font-semibold">⚡ 快速 400</span>
+                    <span class="font-semibold">🐢 慢速 40</span>
+                    <span class="font-semibold">⚡ 快速 208</span>
                 </div>
             </div>
 
@@ -759,7 +759,7 @@ class SmartMetronome {
     }
     
     setBpm(bpm) {
-        this.bpm = Math.max(20, Math.min(400, bpm));
+        this.bpm = Math.max(40, Math.min(208, bpm));
         document.getElementById('bpm-display').textContent = this.bpm;
         document.getElementById('bpm-slider').value = this.bpm;
         
@@ -918,11 +918,11 @@ class SmartMetronome {
         
         document.getElementById('bpm-increase').onclick = function() {
             self.log('点击: bpm-increase');
-            self.setBpm(self.bpm + 5);
+            self.setBpm(self.bpm + 1);
         };
         document.getElementById('bpm-decrease').onclick = function() {
             self.log('点击: bpm-decrease');
-            self.setBpm(self.bpm - 5);
+            self.setBpm(self.bpm - 1);
         };
         
         document.getElementById('start-stop-btn').onclick = function() {
