@@ -33,11 +33,9 @@
             justify-content: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             background-attachment: fixed;
-            /* 确保所有点击能穿透到元素 */
             pointer-events: auto;
         }
         
-        /* 主容器 - 现代化玻璃态设计 */
         .metronome-container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 40px;
@@ -49,7 +47,6 @@
             border: 1px solid rgba(255, 255, 255, 0.6);
         }
         
-        /* 节拍圆圈设计 - 现代化风格 */
         .beat-circle {
             width: 70px;
             height: 70px;
@@ -110,14 +107,12 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
         
-        /* 动画优化 - 更自然的脉动效果 */
         @keyframes beatPulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.3); }
             100% { transform: scale(1.18); }
         }
         
-        /* 主按钮样式 */
         .main-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 600;
@@ -140,7 +135,6 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
         
-        /* 音效模式选择器 */
         .sound-mode-card {
             border-radius: 24px;
             padding: 20px;
@@ -164,7 +158,6 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
         }
         
-        /* BPM滑块美化 */
         .bpm-slider {
             -webkit-appearance: none;
             appearance: none;
@@ -198,7 +191,6 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
         
-        /* 节拍选择按钮 */
         .time-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 600;
@@ -228,7 +220,6 @@
             color: #4a5568;
         }
         
-        /* 控制卡片 */
         .section-card {
             border-radius: 24px;
             padding: 24px;
@@ -239,7 +230,6 @@
             margin-bottom: 24px;
         }
         
-        /* BPM控制按钮 */
         .bpm-btn {
             width: 48px;
             height: 48px;
@@ -264,7 +254,6 @@
             transform: scale(0.98);
         }
         
-        /* 自定义输入框 */
         .custom-input {
             border: 3px solid #e2e8f0;
             border-radius: 14px;
@@ -281,7 +270,6 @@
                 inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         
-        /* 状态栏 */
         .status-panel {
             padding: 16px 28px;
             border-radius: 20px;
@@ -289,7 +277,6 @@
             border: 1px solid #e2e8f0;
         }
         
-        /* 标题渐变 */
         .gradient-title {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
@@ -297,7 +284,6 @@
             background-clip: text;
         }
         
-        /* 响应式优化 */
         @media (max-width: 640px) {
             .beat-circle {
                 width: 56px;
@@ -322,7 +308,6 @@
             }
         }
         
-        /* 模式图标样式 */
         .mode-icon {
             width: 48px;
             height: 48px;
@@ -343,7 +328,6 @@
 </head>
 <body>
     <div class="metronome-container p-6 md:p-10 max-w-3xl w-full mx-4 relative">
-        <!-- 标题区域 -->
         <div class="text-center mb-4">
             <h1 class="text-3xl md:text-5xl font-bold mb-2 leading-tight" id="title-click-area">
                 <span class="gradient-title">🎵 小兔头节拍器</span>
@@ -351,7 +335,6 @@
             <p class="text-gray-600 text-sm md:text-lg font-medium">不同音效模式，满足你的不同练习需求 ✨</p>
         </div>
 
-        <!-- 主要控制按钮区域 - 移到上方，手机首屏可见 -->
         <div class="flex justify-center items-center gap-4 md:gap-8 mb-6">
             <button class="main-btn bg-gradient-to-r from-gray-400 to-gray-600 text-white w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center text-xl md:text-2xl" id="reset-btn">
                 🔄
@@ -364,23 +347,17 @@
             </button>
         </div>
 
-        <!-- 状态栏 -->
         <div class="status-panel text-center mb-6 py-3 px-4">
             <span class="text-gray-600 font-semibold text-base md:text-lg" id="status-text">就绪 - 选择音效模式后点击开始</span>
         </div>
 
-        <!-- 节拍显示区域 - 重新设计的居中布局 -->
         <div class="flex justify-center items-center gap-3 md:gap-5 mb-6 flex-wrap" id="beats-container">
-            <!-- 节拍元素将通过JS动态生成 -->
         </div>
 
-        <!-- 折叠区域 - 手机上依然可见，但内容更紧凑 -->
         <div class="space-y-4">
-            <!-- 音效模式选择区域 -->
             <div>
                 <label class="text-lg font-semibold text-gray-800 block mb-3">🎧 音效模式选择</label>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="sound-mode-grid">
-                    <!-- 传统模式 -->
                     <div class="sound-mode-card p-4" data-mode="traditional">
                         <div class="flex flex-col items-center text-center">
                             <div class="mode-icon w-10 h-10">🥁</div>
@@ -388,7 +365,6 @@
                             <p class="text-xs opacity-80">第一声重音，后面轻音</p>
                         </div>
                     </div>
-                    <!-- 均匀模式 -->
                     <div class="sound-mode-card active p-4" data-mode="uniform">
                         <div class="flex flex-col items-center text-center">
                             <div class="mode-icon w-10 h-10">⚖️</div>
@@ -396,7 +372,6 @@
                             <p class="text-xs opacity-80">所有节拍音量一致</p>
                         </div>
                     </div>
-                    <!-- 童音模式 - 会动态隐藏如果不支持 -->
                     <div class="sound-mode-card p-4" data-mode="voice" id="voice-mode-card">
                         <div class="flex flex-col items-center text-center">
                             <div class="mode-icon w-10 h-10">👶</div>
@@ -407,7 +382,6 @@
                 </div>
             </div>
 
-            <!-- BPM 控制区域 -->
             <div class="section-card p-4 mb-0">
                 <div class="flex items-center justify-between mb-4">
                     <label class="text-lg font-semibold text-gray-800">速度调节</label>
@@ -434,7 +408,6 @@
                 </div>
             </div>
 
-            <!-- 节拍类型选择 -->
             <div class="section-card p-4 mb-0">
                 <label class="text-lg font-semibold text-gray-800 block mb-3">🎼 常见节拍</label>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -465,7 +438,6 @@
                 </div>
             </div>
 
-            <!-- 自定义节拍区域 -->
             <div class="section-card p-4 mb-0">
                 <label class="text-lg font-semibold text-gray-800 block mb-3">⚙️ 自定义节拍</label>
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -495,12 +467,47 @@
             </div>
         </div>
 
-        <!-- 调试日志区域 - 默认隐藏，长按应用设置打开 -->
         <div class="mt-4 p-3 bg-gray-100 rounded-2xl border border-gray-300" id="debug-area" style="display: none;">
             <div class="text-gray-800 font-semibold mb-2 text-sm">📋 调试日志：</div>
             <div id="debug-log" class="text-xs text-gray-600 max-h-32 overflow-y-auto" style="max-height: 100px;"></div>
         </div>
     </div>
+
+<script>
+// ==============================================
+// 屏幕常亮 + 息屏继续发声（已整合，不影响原有功能）
+// ==============================================
+let wakeLock = null;
+async function requestWakeLock() {
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+  } catch (err) {}
+}
+function releaseWakeLock() {
+  if (wakeLock) { wakeLock.release(); wakeLock = null; }
+}
+
+let keepAliveAudio = null;
+function initKeepAlive() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    keepAliveAudio = new AudioCtx();
+    const osc = keepAliveAudio.createOscillator();
+    osc.frequency.value = 0;
+    osc.start();
+    osc.connect(keepAliveAudio.destination);
+  } catch (e) {}
+}
+
+window.addEventListener('load', () => {
+  initKeepAlive();
+  document.addEventListener('click', async function firstClick() {
+    if (keepAliveAudio && keepAliveAudio.state === 'suspended') keepAliveAudio.resume();
+    await requestWakeLock();
+    document.removeEventListener('click', firstClick);
+  }, { once: true });
+});
+</script>
 
 <script>
 class SmartMetronome {
@@ -513,23 +520,18 @@ class SmartMetronome {
         this.beatCount = 4;
         this.soundMode = 'uniform';
         
-        // 正确检测：检查 speechSynthesis 是否存在于 window，不存在不会报错
         this.speechSynth = 'speechSynthesis' in window ? window.speechSynthesis : null;
         this.voice = null;
         
         this.audioContext = null;
         this.sounds = {};
-        
-        // 延迟创建音频上下文，等用户第一次交互（解决小米/安卓移动端自动播放限制）
         this.audioInitialized = false;
         
-        // 日志初始化
         this.log('SmartMetronome v4 最新版本 - ' + new Date().toLocaleDateString());
         this.log('浏览器: ' + navigator.userAgent.substring(0, 100));
         this.log('AudioContext 支持: ' + (window.AudioContext || window.webkitAudioContext ? '✅ 是' : '❌ 否'));
         this.log('SpeechSynthesis 支持: ' + (window.speechSynthesis ? '✅ 是' : '❌ 否'));
         
-        // 如果不支持语音合成，禁用语音模式，默认均匀
         if (!this.speechSynth && this.soundMode === 'voice') {
             this.soundMode = 'uniform';
         }
@@ -541,7 +543,6 @@ class SmartMetronome {
         this.updateBeats();
         this.updateStatus();
         
-        // 如果不支持语音合成，隐藏童音模式选项（放在最后执行，确保DOM就绪）
         if (!this.speechSynth) {
             this.log('不支持语音，隐藏童音模式卡片');
             const voiceCard = document.getElementById('voice-mode-card');
@@ -551,17 +552,14 @@ class SmartMetronome {
             } else {
                 this.log('❌ 找不到voice-mode-card');
             }
-            // 网格变成两列
             const grid = document.getElementById('sound-mode-grid');
             if (grid) {
                 grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
                 this.log('✅ 网格已改为两列');
             }
         } else {
-            // 测试语音是否真的能发声，Chrome Mac 有时支持但无法发声
             const self = this;
             setTimeout(() => {
-                // 做一个简单测试
                 const testUtterance = new SpeechSynthesisUtterance('1');
                 testUtterance.onerror = () => {
                     self.log('语音测试失败，自动隐藏童音模式');
@@ -572,13 +570,11 @@ class SmartMetronome {
                         if (grid) {
                             grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
                         }
-                        // 默认切换到均匀模式
                         self.setSoundMode('uniform');
                     }
                 };
                 if (self.speechSynth) {
                     self.speechSynth.speak(testUtterance);
-                    // 测试完取消
                     setTimeout(() => self.speechSynth.cancel(), 1000);
                 }
             }, 500);
@@ -614,12 +610,10 @@ class SmartMetronome {
             return;
         }
         const voices = this.speechSynth.getVoices();
-        // 增加对 cmn (中文) 的匹配，Safari 使用不同lang格式
         this.voice = voices.find(v => v.lang.includes('zh') || v.lang.includes('cmn') || v.lang.startsWith('zh')) || voices[0];
         
         this.log('初始语音数量: ' + voices.length + ', 选中: ' + (this.voice ? this.voice.name : 'none'));
         
-        // Safari 需要等待 voiceschanged 事件
         if (voices.length === 0) {
             const self = this;
             speechSynthesis.onvoiceschanged = function() {
@@ -658,21 +652,17 @@ class SmartMetronome {
         if (!this.speechSynth || this.soundMode !== 'voice') return;
         
         const utterance = new SpeechSynthesisUtterance(number.toString());
-        // 不指定语音，让浏览器自动选择默认语音，解决Chrome兼容性问题
         if (this.voice && this.voice.name) {
             utterance.voice = this.voice;
         }
         
-        // 根据 BPM 实时调整语速，BPM 越快语速越快，保证常用 BPM 自然清晰
-        // 优化：常用 40-160 BPM 平缓自然增长，上限 2.5 避免失真听不懂
         let rate = 0.8 + (this.bpm / 100);
-        if (rate < 0.8) rate = 0.8;  // 最低语速限制
-        if (rate > 2.5) rate = 2.5;  // 最高语速限制，避免严重失真
+        if (rate < 0.8) rate = 0.8;
+        if (rate > 2.5) rate = 2.5;
         utterance.rate = rate;
-        utterance.pitch = 1.5; // 偏高音调，童声效果
+        utterance.pitch = 1.5;
         utterance.volume = 1;
         
-        // 错误日志方便排查
         utterance.onerror = (event) => {
             this.log('语音错误: ' + event.error + ', 数字: ' + number);
         };
@@ -683,7 +673,6 @@ class SmartMetronome {
             this.log('语音开始播放: ' + number);
         };
         
-        // Chrome Mac 需要确保 resume，有时会被自动暂停
         if (this.speechSynth.paused) {
             this.speechSynth.resume();
         }
@@ -692,10 +681,8 @@ class SmartMetronome {
     }
     
     setSoundMode(mode) {
-        // 重置节拍位置，不cancel避免误杀刚加入的语音（Chrome bug）
         this.currentBeat = 0;
         
-        // 如果不支持语音，不能切换到语音模式
         if (mode === 'voice' && !this.speechSynth) {
             alert('当前浏览器不支持语音合成，无法使用童音数字模式');
             return;
@@ -703,10 +690,8 @@ class SmartMetronome {
         
         this.soundMode = mode;
         
-        // 切换到语音模式时，重新获取语音确保可用
         if (mode === 'voice' && this.speechSynth) {
             this.initSpeech();
-            // 有些浏览器需要用户交互重新激活speechSynthesis
             if (this.speechSynth.paused) {
                 this.speechSynth.resume();
             }
@@ -722,7 +707,6 @@ class SmartMetronome {
         this.updateBeats();
         this.updateStatus();
         
-        // 如果节拍器正在运行，重启计时器确保节奏正确
         if (this.isRunning) {
             this.stop();
             this.start();
@@ -821,7 +805,6 @@ class SmartMetronome {
     start() {
         if (this.isRunning) return;
         
-        // 确保音频上下文启动（处理浏览器自动播放策略 - 必须在用户点击同步创建）
         if (!this.audioInitialized) {
             this.initAudio();
             this.audioInitialized = true;
@@ -830,7 +813,6 @@ class SmartMetronome {
             this.audioContext.resume();
         }
         
-        // 语音模式：先清空队列，确保干净
         if (this.speechSynth && this.soundMode === 'voice') {
             this.speechSynth.cancel();
             this.speechSynth.resume();
@@ -844,7 +826,6 @@ class SmartMetronome {
         
         const interval = 60000 / this.bpm;
         this.intervalId = setInterval(() => this.tick(), interval);
-        // 延迟执行第一次tick，确保cancel完成后再播放，解决Chrome语音被cancel的bug
         setTimeout(() => this.tick(), 50);
         this.updateStatus();
     }
@@ -899,7 +880,6 @@ class SmartMetronome {
     }
     
     testSound() {
-        // 确保音频上下文启动
         if (!this.audioInitialized) {
             this.initAudio();
             this.audioInitialized = true;
@@ -925,10 +905,8 @@ class SmartMetronome {
     }
     
     bindEvents() {
-        // 小米浏览器/安卓浏览器兼容性处理：使用直接的onclick，同时支持触摸
         const self = this;
         
-        // BPM滑块
         document.getElementById('bpm-slider').oninput = function(e) {
             self.log('bpm-slider input: ' + e.target.value);
             self.setBpm(parseInt(e.target.value));
@@ -938,7 +916,6 @@ class SmartMetronome {
             self.setBpm(parseInt(e.target.value));
         };
         
-        // BPM加减按钮
         document.getElementById('bpm-increase').onclick = function() {
             self.log('点击: bpm-increase');
             self.setBpm(self.bpm + 5);
@@ -948,10 +925,8 @@ class SmartMetronome {
             self.setBpm(self.bpm - 5);
         };
         
-        // 主要控制按钮
         document.getElementById('start-stop-btn').onclick = function() {
             self.log('点击: start-stop-btn, 当前状态: ' + (self.isRunning ? '运行中' : '已停止'));
-            // 第一次点击确保音频初始化（小米浏览器要求必须用户点击初始化音频）
             if (!self.audioInitialized) {
                 self.log('初始化音频...');
                 self.initAudio();
@@ -976,7 +951,6 @@ class SmartMetronome {
         
         document.getElementById('test-sound-btn').onclick = function() {
             self.log('点击: test-sound-btn');
-            // 第一次点击确保音频初始化
             if (!self.audioInitialized) {
                 self.log('初始化音频...');
                 self.initAudio();
@@ -988,7 +962,6 @@ class SmartMetronome {
             self.testSound();
         };
         
-        // 音效模式卡片
         document.querySelectorAll('.sound-mode-card').forEach(function(card, index) {
             card.onclick = function() {
                 self.log('点击: 音效模式 ' + card.dataset.mode);
@@ -996,7 +969,6 @@ class SmartMetronome {
             };
         });
         
-        // 节拍按钮
         document.querySelectorAll('.time-btn').forEach(function(btn) {
             btn.onclick = function() {
                 self.log('点击: 节拍类型 ' + btn.dataset.signature);
@@ -1023,7 +995,6 @@ class SmartMetronome {
             };
         }
         
-        // 长按「应用设置」按钮 500ms 开启调试区域
         const applyBtn = document.getElementById('apply-custom');
         let longPressTimer = null;
         if (applyBtn) {
@@ -1048,7 +1019,6 @@ class SmartMetronome {
     }
 }
 
-// DOM already loaded since script is at end of body
 window.metronome = new SmartMetronome();
 </script>
 </body>
