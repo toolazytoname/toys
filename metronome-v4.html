@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎵 智能节拍器 - 多种音效模式</title>
-    <meta name="description" content="一个美观现代的在线节拍器，支持三种音效模式：传统重音、均匀节拍、童音数字">
+    <title>🎵 小兔头节拍器 - 不同音效模式</title>
+    <meta name="description" content="一个美观现代的在线节拍器，支持不同音效模式：传统重音、均匀节拍、童音数字">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -344,157 +344,161 @@
 <body>
     <div class="metronome-container p-6 md:p-10 max-w-3xl w-full mx-4 relative">
         <!-- 标题区域 -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold mb-3 leading-tight" id="title-click-area">
-                <span class="gradient-title">🎵 智能节拍器</span>
+        <div class="text-center mb-4">
+            <h1 class="text-3xl md:text-5xl font-bold mb-2 leading-tight" id="title-click-area">
+                <span class="gradient-title">🎵 小兔头节拍器</span>
             </h1>
-            <p class="text-gray-600 text-base md:text-lg font-medium">三种音效模式，满足你的不同练习需求 ✨</p>
+            <p class="text-gray-600 text-sm md:text-lg font-medium">不同音效模式，满足你的不同练习需求 ✨</p>
         </div>
 
-        <!-- 节拍显示区域 - 重新设计的居中布局 -->
-        <div class="flex justify-center items-center gap-4 md:gap-5 mb-10 flex-wrap" id="beats-container">
-            <!-- 节拍元素将通过JS动态生成 -->
-        </div>
-
-        <!-- 音效模式选择区域 -->
-        <div class="mb-8">
-            <label class="text-xl font-semibold text-gray-800 block mb-4">🎧 音效模式选择</label>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="sound-mode-grid">
-                <!-- 传统模式 -->
-                <div class="sound-mode-card" data-mode="traditional">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="mode-icon">🥁</div>
-                        <h3 class="font-bold text-lg mb-1">传统模式</h3>
-                        <p class="text-sm opacity-80">第一声重音，后面轻音</p>
-                    </div>
-                </div>
-                <!-- 均匀模式 -->
-                <div class="sound-mode-card active" data-mode="uniform">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="mode-icon">⚖️</div>
-                        <h3 class="font-bold text-lg mb-1">均匀模式</h3>
-                        <p class="text-sm opacity-80">所有节拍音量一致</p>
-                    </div>
-                </div>
-                <!-- 童音模式 - 会动态隐藏如果不支持 -->
-                <div class="sound-mode-card" data-mode="voice" id="voice-mode-card">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="mode-icon">👶</div>
-                        <h3 class="font-bold text-lg mb-1">童音数字</h3>
-                        <p class="text-sm opacity-80">朗读 1 2 3 4...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- BPM 控制区域 -->
-        <div class="section-card">
-            <div class="flex items-center justify-between mb-6">
-                <label class="text-xl font-semibold text-gray-800">速度调节</label>                <div class="flex items-center gap-3">
-                    <span class="text-4xl font-bold gradient-title" id="bpm-display">120</span>
-                    <span class="text-gray-600 font-semibold text-lg">BPM</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-4">
-                <button class="bpm-btn" id="bpm-decrease">-</button>
-                <input 
-                    type="range" 
-                    min="20" 
-                    max="400" 
-                    value="120" 
-                    class="bpm-slider"
-                    id="bpm-slider"
-                >
-                <button class="bpm-btn" id="bpm-increase">+</button>
-            </div>
-            <div class="flex justify-between text-sm text-gray-600 mt-4 px-1">
-                <span class="font-semibold">🐢 慢速 20</span>
-                <span class="font-semibold">⚡ 快速 400</span>
-            </div>
-        </div>
-
-        <!-- 节拍类型选择 -->
-        <div class="section-card">
-            <label class="text-xl font-semibold text-gray-800 block mb-4">🎼 常见节拍</label>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <button class="time-btn active py-4 px-4" data-signature="4/4">
-                    <span class="text-xl">4/4</span>
-                    <div class="text-xs font-normal mt-1 opacity-70">四分音符为一拍</div>
-                </button>
-                <button class="time-btn py-4 px-4" data-signature="3/4">
-                    <span class="text-xl">3/4</span>
-                    <div class="text-xs font-normal mt-1 opacity-70">圆舞曲</div>
-                </button>
-                <button class="time-btn py-4 px-4" data-signature="2/4">
-                    <span class="text-xl">2/4</span>
-                    <div class="text-xs font-normal mt-1 opacity-70">进行曲</div>
-                </button>
-                <button class="time-btn py-4 px-4" data-signature="6/8">
-                    <span class="text-xl">6/8</span>
-                    <div class="text-xs font-normal mt-1 opacity-70">八六拍</div>
-                </button>
-                <button class="time-btn py-4 px-4" data-signature="5/4">
-                    <span class="text-xl">5/4</span>
-                    <div class="text-xs font-normal mt-1 opacity-70">非常规拍</div>
-                </button>
-                <button class="time-btn py-4 px-4" data-signature="7/8">
-                    <span class="text-xl">7/8</span>
-                    <div class="text-xs font-normal mt-1 opacity-70">现代风格</div>
-                </button>
-            </div>
-        </div>
-
-        <!-- 自定义节拍区域 -->
-        <div class="section-card">
-            <label class="text-xl font-semibold text-gray-800 block mb-4">⚙️ 自定义节拍</label>
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                <div class="flex items-center gap-3 justify-center sm:justify-start">
-                    <input 
-                        type="number" 
-                        min="1" 
-                        max="16" 
-                        value="4" 
-                        class="custom-input w-20 px-3 py-3 text-center font-bold text-xl text-gray-800"
-                        id="custom-beats"
-                    >
-                    <span class="text-3xl font-bold text-gray-600">/</span>
-                    <input 
-                        type="number" 
-                        min="1" 
-                        max="16" 
-                        value="4" 
-                        class="custom-input w-20 px-3 py-3 text-center font-bold text-xl text-gray-800"
-                        id="custom-unit"
-                    >
-                </div>
-                <button class="main-btn bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-3 px-8 rounded-xl font-semibold text-lg" id="apply-custom">
-                    应用设置
-                </button>
-            </div>
-        </div>
-
-        <!-- 主要控制按钮区域 -->
-        <div class="flex justify-center items-center gap-5 md:gap-8 mb-8">
-            <button class="main-btn bg-gradient-to-r from-gray-400 to-gray-600 text-white w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center text-2xl" id="reset-btn">
+        <!-- 主要控制按钮区域 - 移到上方，手机首屏可见 -->
+        <div class="flex justify-center items-center gap-4 md:gap-8 mb-6">
+            <button class="main-btn bg-gradient-to-r from-gray-400 to-gray-600 text-white w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center text-xl md:text-2xl" id="reset-btn">
                 🔄
             </button>
-            <button class="main-btn bg-gradient-to-r from-green-500 to-teal-500 text-white w-32 h-32 md:w-36 md:h-36 rounded-full flex items-center justify-center text-2xl font-semibold" id="start-stop-btn">
+            <button class="main-btn bg-gradient-to-r from-green-500 to-teal-500 text-white w-24 h-24 md:w-36 md:h-36 rounded-full flex items-center justify-center text-xl md:text-2xl font-semibold" id="start-stop-btn">
                 ▶️ 开始
             </button>
-            <button class="main-btn bg-gradient-to-r from-purple-500 to-pink-500 text-white w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center text-2xl" id="test-sound-btn">
+            <button class="main-btn bg-gradient-to-r from-purple-500 to-pink-500 text-white w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center text-xl md:text-2xl" id="test-sound-btn">
                 🔊 试音
             </button>
         </div>
 
         <!-- 状态栏 -->
-        <div class="status-panel text-center">
-            <span class="text-gray-600 font-semibold text-lg" id="status-text">就绪 - 选择音效模式后点击开始</span>
+        <div class="status-panel text-center mb-6 py-3 px-4">
+            <span class="text-gray-600 font-semibold text-base md:text-lg" id="status-text">就绪 - 选择音效模式后点击开始</span>
         </div>
 
-        <!-- 调试日志区域 - 默认隐藏，点击标题10次显示 -->
-        <div class="mt-6 p-4 bg-gray-100 rounded-2xl border border-gray-300" id="debug-area" style="display: none;">
+        <!-- 节拍显示区域 - 重新设计的居中布局 -->
+        <div class="flex justify-center items-center gap-3 md:gap-5 mb-6 flex-wrap" id="beats-container">
+            <!-- 节拍元素将通过JS动态生成 -->
+        </div>
+
+        <!-- 折叠区域 - 手机上依然可见，但内容更紧凑 -->
+        <div class="space-y-4">
+            <!-- 音效模式选择区域 -->
+            <div>
+                <label class="text-lg font-semibold text-gray-800 block mb-3">🎧 音效模式选择</label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="sound-mode-grid">
+                    <!-- 传统模式 -->
+                    <div class="sound-mode-card p-4" data-mode="traditional">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="mode-icon w-10 h-10">🥁</div>
+                            <h3 class="font-bold text-base mb-1">传统模式</h3>
+                            <p class="text-xs opacity-80">第一声重音，后面轻音</p>
+                        </div>
+                    </div>
+                    <!-- 均匀模式 -->
+                    <div class="sound-mode-card active p-4" data-mode="uniform">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="mode-icon w-10 h-10">⚖️</div>
+                            <h3 class="font-bold text-base mb-1">均匀模式</h3>
+                            <p class="text-xs opacity-80">所有节拍音量一致</p>
+                        </div>
+                    </div>
+                    <!-- 童音模式 - 会动态隐藏如果不支持 -->
+                    <div class="sound-mode-card p-4" data-mode="voice" id="voice-mode-card">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="mode-icon w-10 h-10">👶</div>
+                            <h3 class="font-bold text-base mb-1">童音数字</h3>
+                            <p class="text-xs opacity-80">朗读 1 2 3 4...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BPM 控制区域 -->
+            <div class="section-card p-4 mb-0">
+                <div class="flex items-center justify-between mb-4">
+                    <label class="text-lg font-semibold text-gray-800">速度调节</label>
+                    <div class="flex items-center gap-2">
+                        <span class="text-3xl font-bold gradient-title" id="bpm-display">120</span>
+                        <span class="text-gray-600 font-semibold text-base">BPM</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="bpm-btn w-10 h-10 text-xl" id="bpm-decrease">-</button>
+                    <input 
+                        type="range" 
+                        min="20" 
+                        max="400" 
+                        value="120" 
+                        class="bpm-slider"
+                        id="bpm-slider"
+                    >
+                    <button class="bpm-btn w-10 h-10 text-xl" id="bpm-increase">+</button>
+                </div>
+                <div class="flex justify-between text-sm text-gray-600 mt-3 px-1">
+                    <span class="font-semibold">🐢 慢速 20</span>
+                    <span class="font-semibold">⚡ 快速 400</span>
+                </div>
+            </div>
+
+            <!-- 节拍类型选择 -->
+            <div class="section-card p-4 mb-0">
+                <label class="text-lg font-semibold text-gray-800 block mb-3">🎼 常见节拍</label>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    <button class="time-btn active py-3 px-3" data-signature="4/4">
+                        <span class="text-lg">4/4</span>
+                        <div class="text-xs font-normal mt-1 opacity-70">四分音符为一拍</div>
+                    </button>
+                    <button class="time-btn py-3 px-3" data-signature="3/4">
+                        <span class="text-lg">3/4</span>
+                        <div class="text-xs font-normal mt-1 opacity-70">圆舞曲</div>
+                    </button>
+                    <button class="time-btn py-3 px-3" data-signature="2/4">
+                        <span class="text-lg">2/4</span>
+                        <div class="text-xs font-normal mt-1 opacity-70">进行曲</div>
+                    </button>
+                    <button class="time-btn py-3 px-3" data-signature="6/8">
+                        <span class="text-lg">6/8</span>
+                        <div class="text-xs font-normal mt-1 opacity-70">八六拍</div>
+                    </button>
+                    <button class="time-btn py-3 px-3" data-signature="5/4">
+                        <span class="text-lg">5/4</span>
+                        <div class="text-xs font-normal mt-1 opacity-70">非常规拍</div>
+                    </button>
+                    <button class="time-btn py-3 px-3" data-signature="7/8">
+                        <span class="text-lg">7/8</span>
+                        <div class="text-xs font-normal mt-1 opacity-70">现代风格</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 自定义节拍区域 -->
+            <div class="section-card p-4 mb-0">
+                <label class="text-lg font-semibold text-gray-800 block mb-3">⚙️ 自定义节拍</label>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <div class="flex items-center gap-2 justify-center sm:justify-start">
+                        <input 
+                            type="number" 
+                            min="1" 
+                            max="16" 
+                            value="4" 
+                            class="custom-input w-16 px-2 py-2 text-center font-bold text-lg text-gray-800"
+                            id="custom-beats"
+                        >
+                        <span class="text-2xl font-bold text-gray-600">/</span>
+                        <input 
+                            type="number" 
+                            min="1" 
+                            max="16" 
+                            value="4" 
+                            class="custom-input w-16 px-2 py-2 text-center font-bold text-lg text-gray-800"
+                            id="custom-unit"
+                        >
+                    </div>
+                    <button class="main-btn bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-3 px-6 rounded-xl font-semibold text-base" id="apply-custom">
+                        应用设置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 调试日志区域 - 默认隐藏，长按应用设置打开 -->
+        <div class="mt-4 p-3 bg-gray-100 rounded-2xl border border-gray-300" id="debug-area" style="display: none;">
             <div class="text-gray-800 font-semibold mb-2 text-sm">📋 调试日志：</div>
-            <div id="debug-log" class="text-xs text-gray-600 max-h-32 overflow-y-auto" style="max-height: 120px;"></div>
+            <div id="debug-log" class="text-xs text-gray-600 max-h-32 overflow-y-auto" style="max-height: 100px;"></div>
         </div>
     </div>
 
@@ -553,6 +557,31 @@ class SmartMetronome {
                 grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
                 this.log('✅ 网格已改为两列');
             }
+        } else {
+            // 测试语音是否真的能发声，Chrome Mac 有时支持但无法发声
+            const self = this;
+            setTimeout(() => {
+                // 做一个简单测试
+                const testUtterance = new SpeechSynthesisUtterance('1');
+                testUtterance.onerror = () => {
+                    self.log('语音测试失败，自动隐藏童音模式');
+                    const voiceCard = document.getElementById('voice-mode-card');
+                    if (voiceCard) {
+                        voiceCard.style.display = 'none';
+                        const grid = document.getElementById('sound-mode-grid');
+                        if (grid) {
+                            grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+                        }
+                        // 默认切换到均匀模式
+                        self.setSoundMode('uniform');
+                    }
+                };
+                if (self.speechSynth) {
+                    self.speechSynth.speak(testUtterance);
+                    // 测试完取消
+                    setTimeout(() => self.speechSynth.cancel(), 1000);
+                }
+            }, 500);
         }
         
         this.log('✅ 初始化完成');
@@ -585,14 +614,19 @@ class SmartMetronome {
             return;
         }
         const voices = this.speechSynth.getVoices();
-        this.voice = voices.find(v => v.lang.includes('zh')) || voices[0];
+        // 增加对 cmn (中文) 的匹配，Safari 使用不同lang格式
+        this.voice = voices.find(v => v.lang.includes('zh') || v.lang.includes('cmn') || v.lang.startsWith('zh')) || voices[0];
         
+        this.log('初始语音数量: ' + voices.length + ', 选中: ' + (this.voice ? this.voice.name : 'none'));
+        
+        // Safari 需要等待 voiceschanged 事件
         if (voices.length === 0) {
-            setTimeout(() => {
-                if (this.speechSynth) {
-                    this.voice = this.speechSynth.getVoices().find(v => v.lang.includes('zh')) || this.speechSynth.getVoices()[0];
-                }
-            }, 100);
+            const self = this;
+            speechSynthesis.onvoiceschanged = function() {
+                const newVoices = self.speechSynth.getVoices();
+                self.log('voiceschanged 事件触发，语音数量: ' + newVoices.length);
+                self.voice = newVoices.find(v => v.lang.includes('zh') || v.lang.includes('cmn') || v.lang.startsWith('zh')) || newVoices[0];
+            };
         }
     }
     
@@ -624,21 +658,41 @@ class SmartMetronome {
         if (!this.speechSynth || this.soundMode !== 'voice') return;
         
         const utterance = new SpeechSynthesisUtterance(number.toString());
-        if (this.voice) {
+        // 不指定语音，让浏览器自动选择默认语音，解决Chrome兼容性问题
+        if (this.voice && this.voice.name) {
             utterance.voice = this.voice;
         }
-        utterance.rate = 1.0; // 不加速，自然语速
+        
+        // 根据 BPM 实时调整语速，BPM 越快语速越快，保证常用 BPM 自然清晰
+        // 优化：常用 40-160 BPM 平缓自然增长，上限 2.5 避免失真听不懂
+        let rate = 0.8 + (this.bpm / 100);
+        if (rate < 0.8) rate = 0.8;  // 最低语速限制
+        if (rate > 2.5) rate = 2.5;  // 最高语速限制，避免严重失真
+        utterance.rate = rate;
         utterance.pitch = 1.5; // 偏高音调，童声效果
         utterance.volume = 1;
+        
+        // 错误日志方便排查
+        utterance.onerror = (event) => {
+            this.log('语音错误: ' + event.error + ', 数字: ' + number);
+        };
+        utterance.onend = () => {
+            this.log('语音播放完成: ' + number);
+        };
+        utterance.onstart = () => {
+            this.log('语音开始播放: ' + number);
+        };
+        
+        // Chrome Mac 需要确保 resume，有时会被自动暂停
+        if (this.speechSynth.paused) {
+            this.speechSynth.resume();
+        }
         
         this.speechSynth.speak(utterance);
     }
     
     setSoundMode(mode) {
-        // 切换模式前取消所有待播放语音，重置节拍位置
-        if (this.speechSynth) {
-            this.speechSynth.cancel();
-        }
+        // 重置节拍位置，不cancel避免误杀刚加入的语音（Chrome bug）
         this.currentBeat = 0;
         
         // 如果不支持语音，不能切换到语音模式
@@ -649,6 +703,15 @@ class SmartMetronome {
         
         this.soundMode = mode;
         
+        // 切换到语音模式时，重新获取语音确保可用
+        if (mode === 'voice' && this.speechSynth) {
+            this.initSpeech();
+            // 有些浏览器需要用户交互重新激活speechSynthesis
+            if (this.speechSynth.paused) {
+                this.speechSynth.resume();
+            }
+        }
+        
         document.querySelectorAll('.sound-mode-card').forEach(card => {
             card.classList.remove('active');
             if (card.dataset.mode === mode) {
@@ -658,6 +721,12 @@ class SmartMetronome {
         
         this.updateBeats();
         this.updateStatus();
+        
+        // 如果节拍器正在运行，重启计时器确保节奏正确
+        if (this.isRunning) {
+            this.stop();
+            this.start();
+        }
     }
     
     updateBeats() {
@@ -761,14 +830,22 @@ class SmartMetronome {
             this.audioContext.resume();
         }
         
+        // 语音模式：先清空队列，确保干净
+        if (this.speechSynth && this.soundMode === 'voice') {
+            this.speechSynth.cancel();
+            this.speechSynth.resume();
+        }
+        
         this.isRunning = true;
         const btn = document.getElementById('start-stop-btn');
         btn.innerHTML = '⏸️ 暂停';
-        btn.classList.remove('from-green-500', 'to-teal-500');
+        btn.classList.remove('from-green-500', 'to-teal-50');
         btn.classList.add('from-yellow-500', 'to-orange-500');
         
         const interval = 60000 / this.bpm;
         this.intervalId = setInterval(() => this.tick(), interval);
+        // 延迟执行第一次tick，确保cancel完成后再播放，解决Chrome语音被cancel的bug
+        setTimeout(() => this.tick(), 50);
         this.updateStatus();
     }
     
@@ -794,11 +871,6 @@ class SmartMetronome {
     }
     
     tick() {
-        // 语音模式下，播放新节拍前取消上一个语音，避免跟不上
-        if (this.speechSynth && this.soundMode === 'voice') {
-            this.speechSynth.cancel();
-        }
-        
         document.querySelectorAll('.beat-circle').forEach(item => {
             item.classList.remove('active');
         });
